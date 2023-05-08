@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: augmedix-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: augmedix-frontend
+  template:
+    metadata:
+      labels:
+        app: augmedix-frontend
+    spec:
+      containers:
+        - name: augmedix-frontend
+          image: 138645654058.dkr.ecr.us-east-1.amazonaws.com/augmedix-frontend:1.0
+          ports:
+            - containerPort: 80
+              protocol: TCP
+      imagePullSecrets:
+        - name: registrypullsecret
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: augmedix-frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: augmedix-frontend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8002
+      targetPort: 80
